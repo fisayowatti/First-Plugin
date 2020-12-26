@@ -1,0 +1,30 @@
+<h2>Rectangle Creator</h2>
+<p>Count: <input id="count" value="5"></p>
+<button id="create">Create</button>
+<button id="cancel">Cancel</button>
+<!-- <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+  <path id="newPath" d=""/>
+</svg> -->
+<div id="replace"></div>
+<script>
+
+  document.getElementById('create').onclick = () => {
+    const textbox = document.getElementById('count');
+    const count = parseInt(textbox.value, 10);
+    parent.postMessage({ pluginMessage: { type: 'create-rectangles', count } }, '*')
+  }
+
+  document.getElementById('cancel').onclick = () => {
+    parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*')
+  }
+
+  window.onmessage = async event => {
+    const message = event.data.pluginMessage;
+    console.log(message.selection[0].data)
+    
+
+    // const svgPath = document.getElementById('newPath');
+    // svgPath.setAttribute('d', message.selection[0].data)
+  }
+
+</script>
