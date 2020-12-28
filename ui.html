@@ -2,9 +2,15 @@
 <p>Count: <input id="count" value="5"></p>
 <button id="create">Create</button>
 <button id="cancel">Cancel</button>
-<!-- <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
-  <path id="newPath" d=""/>
-</svg> -->
+<br/>
+<label for="cowbell">
+  Light Intensity:
+  <input type="range" id="light-intensity" name="light-intensity" min="40" max="100" value="90" step="10">
+</label>
+<p>Light Color: <input id="light-color" value="#FFFFFF"></p>
+<p>BG color: <input id="bg-color" value="#4D95CC"></p>
+<button id="glassify">Glassify</button>
+
 <div id="replace"></div>
 <script>
 
@@ -18,13 +24,23 @@
     parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*')
   }
 
-  window.onmessage = async event => {
-    const message = event.data.pluginMessage;
-    console.log(message.selection[0].data)
-    
+  document.getElementById('glassify').onclick = () => {
+    const lightIntensityHolder = document.getElementById('light-intensity');
+    const lightColorHolder = document.getElementById('light-color');
+    const bgColorHolder = document.getElementById('bg-color');
 
-    // const svgPath = document.getElementById('newPath');
-    // svgPath.setAttribute('d', message.selection[0].data)
+    const lightIntensity = lightIntensityHolder.value;
+    const lightColor = lightColorHolder.value;
+    const bgColor = bgColorHolder.value;
+
+    console.log('hehe', lightIntensity, lightColor, bgColor)
+
+    parent.postMessage({ pluginMessage: { type: 'glassify', lightIntensity, lightColor, bgColor } }, '*')
   }
+
+  // window.onmessage = async event => {
+  //   const message = event.data.pluginMessage;
+  //   console.log(message.selection[0].data)
+  // }
 
 </script>
