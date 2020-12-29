@@ -1,8 +1,8 @@
-<h2>Rectangle Creator</h2>
-<p>Count: <input id="count" value="5"></p>
+<h2>Glassify beta</h2>
+<!-- <p>Count: <input id="count" value="5"></p>
 <button id="create">Create</button>
 <button id="cancel">Cancel</button>
-<br/>
+<br/> -->
 <label for="cowbell">
   Light Intensity:
   <input type="range" id="light-intensity" name="light-intensity" min="40" max="100" value="90" step="10">
@@ -14,15 +14,15 @@
 <div id="replace"></div>
 <script>
 
-  document.getElementById('create').onclick = () => {
-    const textbox = document.getElementById('count');
-    const count = parseInt(textbox.value, 10);
-    parent.postMessage({ pluginMessage: { type: 'create-rectangles', count } }, '*')
-  }
+  // document.getElementById('create').onclick = () => {
+  //   const textbox = document.getElementById('count');
+  //   const count = parseInt(textbox.value, 10);
+  //   parent.postMessage({ pluginMessage: { type: 'create-rectangles', count } }, '*')
+  // }
 
-  document.getElementById('cancel').onclick = () => {
-    parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*')
-  }
+  // document.getElementById('cancel').onclick = () => {
+  //   parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*')
+  // }
 
   document.getElementById('glassify').onclick = () => {
     const lightIntensityHolder = document.getElementById('light-intensity');

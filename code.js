@@ -76,7 +76,7 @@ const hexToRGBA = (hex, alpha = 0) => {
         a: alpha
     };
 };
-const lightenHex = (hexColor, alpha) => {
+const lightenHexToRGBA = (hexColor, alpha) => {
     const rgb = hexToRGBA(hexColor);
     return {
         r: Math.min(1, rgb.r * 1.1),
@@ -85,15 +85,15 @@ const lightenHex = (hexColor, alpha) => {
         a: alpha
     };
 };
-const darkenHex = (hexColor, alpha) => {
-    const rgb = hexToRGBA(hexColor);
-    return {
-        r: Math.max(0, rgb.r * 0.9),
-        g: Math.max(0, rgb.g * 0.9),
-        b: Math.max(0, rgb.b * 0.9),
-        a: alpha
-    };
-};
+// const darkenHexToRGBA = (hexColor, alpha: number) => {
+//   const rgb = hexToRGBA(hexColor);
+//   return {
+//     r: Math.max(0, rgb.r * 0.9),
+//     g: Math.max(0, rgb.g * 0.9),
+//     b: Math.max(0, rgb.b * 0.9),
+//     a: alpha
+//   }
+// }
 // This plugin will open a window to prompt the user to enter a number, and
 // it will then create that many rectangles on the screen.
 // This file holds the main code for the plugins. It has access to the *document*.
@@ -127,6 +127,12 @@ figma.on('selectionchange', () => {
     // const newNode = figma.createNodeFromSvg(figma.currentPage.selection.map(node => node.vectorPaths[0])[0].data)
     console.log(figma.currentPage.selection[0]);
 });
+const radialTopLeftTx = [0.3572564721107483, 0.16031566262245178, 0.49201685190200806];
+const radialBottomRightTx = [-0.16012853384017944, 0.16538913547992706, 0.49651965498924255];
+const radialBottomLeftTx = [0.38503000140190125, -0.13427551090717316, 0.6248728632926941];
+const radialTopRightTx = [0.16108153760433197, 0.166435107588768, 0.33643829822540283];
+const linearTopLeftTx = [0.7149112820625305, 0.32662856578826904, -0.022147150710225105];
+const linearBottomRightTx = [-0.3259817957878113, 0.3308306634426117, 0.49701404571533203];
 let desiredFill = {
     type: "GRADIENT_RADIAL",
     visible: true,
@@ -143,8 +149,8 @@ let desiredFill = {
         }
     ],
     gradientTransform: [
-        [0.35403570532798767, 0.16025729477405548, 0.48570701479911804],
-        [-0.1602572798728943, 0.16398245096206665, 0.49627482891082764]
+        radialTopLeftTx,
+        radialBottomRightTx
     ]
 };
 let desiredStrokeLighterBg = {
@@ -163,8 +169,8 @@ let desiredStrokeLighterBg = {
         }
     ],
     gradientTransform: [
-        [0.36374300718307495, 0.16152098774909973, 0.4829544126987457],
-        [-0.16152098774909973, 0.16847868263721466, 0.49491479992866516]
+        radialTopLeftTx,
+        radialBottomRightTx
     ]
 };
 let desiredStrokeDarkerBg = {
@@ -183,12 +189,12 @@ let desiredStrokeDarkerBg = {
         }
     ],
     gradientTransform: [
-        [-0.3619246184825897, -0.16460323333740234, 1.014169692993164],
-        [0.16460323333740234, -0.167636439204216, 0.5019176602363586]
+        radialBottomLeftTx,
+        radialTopRightTx
     ]
 };
 let desiredStrokeLightSource = {
-    type: "GRADIENT_RADIAL",
+    type: "GRADIENT_LINEAR",
     visible: true,
     opacity: 1,
     blendMode: "NORMAL",
@@ -203,8 +209,8 @@ let desiredStrokeLightSource = {
         }
     ],
     gradientTransform: [
-        [0.36374300718307495, 0.16152098774909973, 0.4829544126987457],
-        [-0.16152098774909973, 0.16847868263721466, 0.49491479992866516]
+        linearTopLeftTx,
+        linearBottomRightTx
     ]
 };
 const desiredStrokeWeight = 3;
@@ -220,10 +226,10 @@ const glassify = (node, lightIntensity, lightColor, bgColor) => {
     desiredStrokeLightSource.gradientStops[1].color = hexToRGBA(lightColor);
     //change the color of the light that affects the fill of the shape
     desiredFill.gradientStops[0].color = hexToRGBA(lightColor, 0.40);
-    desiredStrokeLighterBg.gradientStops[0].color = lightenHex(bgColor, 1);
-    desiredStrokeLighterBg.gradientStops[1].color = lightenHex(bgColor, 0);
-    desiredStrokeDarkerBg.gradientStops[0].color = darkenHex(bgColor, 1);
-    desiredStrokeDarkerBg.gradientStops[1].color = darkenHex(bgColor, 0);
+    desiredStrokeLighterBg.gradientStops[0].color = lightenHexToRGBA(bgColor, 0);
+    desiredStrokeLighterBg.gradientStops[1].color = lightenHexToRGBA(bgColor, 1);
+    desiredStrokeDarkerBg.gradientStops[0].color = lightenHexToRGBA(bgColor, 0);
+    desiredStrokeDarkerBg.gradientStops[1].color = lightenHexToRGBA(bgColor, 1);
     console.log('rubbish?', desiredStrokeLightSource, desiredStrokeLighterBg, desiredStrokeDarkerBg);
     node.fills = [desiredFill];
     node.strokes = [desiredStrokeLighterBg, desiredStrokeDarkerBg, desiredStrokeLightSource];
